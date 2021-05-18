@@ -1,0 +1,66 @@
+<head></head>
+  <script src="/dist/js/aspera-on-cloud-sdk.js"></script>
+</head>
+<body>
+  <div>
+    <div id="not-authenticated" style="display:block">
+      <p>Click the link below to authenticate.</p>
+      <a href="" id="authenticate">Authenticate</a>
+    </div>
+    <div id="authenticated" style="display:none">
+      <p>You have successfully retrieved an access code.</p>
+      <p>Exchanging the access code for an access token...</p>
+      <p>If successful, you should see your account details:</p>
+      <p id="self"></p>
+    </div>
+  </div>
+
+  <script>
+    function getAccessCode() {
+      return new URLSearchParams(window.location.search).get('code')
+    }
+
+    function showAccount() {
+      window.aoc.getSelf()
+        .then(res => {
+          const selfContainer = document.getElementById('self');
+          selfContainer.innerText = JSON.stringify(res.data);
+        })
+
+      console.log(window.aoc.auth.getAccessToken());
+    }
+
+    function toggleAuthSections() {
+      document.getElementById('not-authenticated').style.display = 'none';
+      document.getElementById('authenticated').style.display = 'block';
+    }
+
+    // Setup: insert your API client application settings here
+    const clientId = "CLIENT_ID";
+    const clientSecret = "CLIENT_SECRET";
+    const org = "ORG";
+    const redirectUri = "REDIRECT_URI";
+
+    const options = { clientId, clientSecret, org, redirectUri };
+    window.aoc = new AsperaOnCloud(options);
+
+    const accessCode = getAccessCode();
+
+    if (!accessCode) {
+      const oauthUrl = window.aoc.auth.getOauthUrl(undefined, ['admin-user:all', 'user:all']);
+      document.getElementById('authenticate').href = oauthUrl;
+    } else {
+      toggleAuthSections();
+
+      window.aoc.auth.getAccessTokenWithCode(accessCode, ['admin-user:all', 'user:all'])
+        .then(res => {
+          console.log(res);
+          window.aoc.auth.setAccessToken(res.data.access_token);
+          showAccount();
+        })
+        .catch(err => {
+          console.error('Failed to get access token:', err);
+        });
+    }
+  </script>
+</body>

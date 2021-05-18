@@ -1,0 +1,7 @@
+{
+  "name": "@dwosk/aspera-on-cloud-sdk-js-examples",
+  "version": "0.1.0",
+  "devDependencies": {
+    "express": "^4.17.1"
+  }
+}
