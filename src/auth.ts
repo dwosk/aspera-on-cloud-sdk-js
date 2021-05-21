@@ -71,24 +71,36 @@ export class AsperaOnCloudAuth {
   }
 
   /** Get the OAuth2 URL used for Aspera on Cloud API authentication */
-  getOauthUrl(state?: string, scope: string[] = ['user:all']) {
+  getOauthUrl(state?: string, scope: string[] = ['user:all'], responseType = 'code') {
     if (!this.getClientId()) {
       throw new Error('Missing client id');
-    }
-
-    if (!this.getRedirectUri()) {
-      throw new Error('Missing redirect uri');
     }
 
     if (!this.getOrg()) {
       throw new Error('Missing org');
     }
 
+    if (responseType === 'code' && !this.getRedirectUri()) {
+      throw new Error('Missing redirect uri');
+    }
+
     let oauthUrl = `${this.getBasePath()}/oauth2/${this.getOrg()}/authorize`;
-    oauthUrl += '?response_type=code';
+
+    if (responseType === 'code') {
+      oauthUrl += '?response_type=code';
+    } else {
+      oauthUrl += '?response_type=token';
+    }
+
     oauthUrl += `&client_id=${this.getClientId()}`;
-    oauthUrl += `&redirect_uri=${this.getRedirectUri()}`;
-    oauthUrl += `&scope=${scope.join(' ')}`;
+
+    if (this.getRedirectUri()) {
+      oauthUrl += `&redirect_uri=${this.getRedirectUri()}`;
+    }
+
+    if (scope) {
+      oauthUrl += `&scope=${scope.join(' ')}`;
+    }
 
     if (state) {
       oauthUrl += `&state=${state}`;
