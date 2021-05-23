@@ -38,7 +38,7 @@ aoc.api.users.getUsers({}, { query: { per_page: 1, page: 1 }})
   .catch(err => console.error(err));
 ```
 
-For more complete usage, check out the [Aspera On Cloud API documentation](https://developer.ibm.com/apis/catalog/aspera--aspera-on-cloud-api/Introduction) for detailed information about which functions are available.
+For more complete usage, check out the [Documentation](https://dwosk.github.io/aspera-on-cloud-sdk-js/interfaces/aspera_on_cloud.asperaoncloudapi.html) for detailed information about which functions are available.
 
 See [Examples][examples] for how to perform browser-based authentication to retrieve an OAuth2 access token.
 

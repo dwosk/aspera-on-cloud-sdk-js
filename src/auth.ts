@@ -7,16 +7,6 @@ if (!isBrowser()) {
   jwt = require('njwt');
 }
 
-/**
- * @class AsperaOnCloudAuth
- * @classdesc The class that retrieves and manages the Aspera On Cloud API access tokens.
- * @arg {Object} options
- * @arg {String} [options.accessToken] - Access token used to authenticate to the Aspera on Cloud API.
- * @arg {String} [options.clientId] - The client id of your app in the Aspera on Cloud Admin app.
- * @arg {String} [options.clientSecret] - The client secret of your app in the Aspera on Cloud Admin app.
- * @arg {String} [options.org] - The organization that your app belongs to.
- * @arg {String} [options.redirect_uri] - The redirect uri of your app specified in the Aspera on Cloud Admin app.
- */
 export class AsperaOnCloudAuth {
   accessToken?;
   axiosInstance;
@@ -50,16 +40,15 @@ export class AsperaOnCloudAuth {
 
   /**
    * Get the access token used to authenticate to the Aspera On Cloud API.
-   * @returns {String} Access token
+   * @returns Access token
    */
   getAccessToken() {
     return this.accessToken;
   }
 
   /**
-   *
-   * @arg {String} accessToken - Set the access token used to authenticate to the Aspera On Cloud API.
-   * @returns {void}
+   * Set the access token used to authenticate to the Aspera On Cloud API.
+   * @param accessToken - Access token
    */
   setAccessToken(accessToken: string) {
     this.accessToken = accessToken;
@@ -68,7 +57,7 @@ export class AsperaOnCloudAuth {
 
   /**
    * Get the axios instance used by the AsperaOnCloudAuth class.
-   * @returns {Function} Axios instance
+   * @returns Axios instance
    */
   getAxios() {
     return this.axiosInstance;
@@ -76,7 +65,7 @@ export class AsperaOnCloudAuth {
 
   /**
    * Get the base path used for Aspera On Cloud API requests.
-   * @returns {String} Base path for API requests
+   * @returns Base path for API requests
    */
   getBasePath() {
     return this.basePath;
@@ -84,7 +73,7 @@ export class AsperaOnCloudAuth {
 
   /**
    * Get the client id for the API integration.
-   * @returns {String} Client id
+   * @returns Client id
    */
   getClientId() {
     return this.clientId;
@@ -92,7 +81,7 @@ export class AsperaOnCloudAuth {
 
   /**
    * Get the client secret for the API integration.
-   * @returns {String} Client secret
+   * @returns Client secret
    */
   getClientSecret() {
     return this.clientSecret;
@@ -100,7 +89,7 @@ export class AsperaOnCloudAuth {
 
   /**
    * Get the Aspera On Cloud organization.
-   * @returns {String} Org
+   * @returns Org
    */
   getOrg() {
     return this.org;
@@ -108,7 +97,7 @@ export class AsperaOnCloudAuth {
 
   /**
    * Get the redirect uri used by the API integration.
-   * @returns {String} Redirect uri
+   * @returns Redirect uri
    */
   getRedirectUri() {
     return this.redirectUri;
@@ -116,9 +105,10 @@ export class AsperaOnCloudAuth {
 
   /**
    * Get the OAuth2 URL used for Aspera on Cloud API authentication
-   * @arg {String} state - State to be returned in the redirect URI.
-   * @arg {Array} scope - The granted access to be given to the access token.
-   * @returns {String} - The URL to be used for Aspera On Cloud API authentication.
+   * @param state - State to be returned in the redirect URI.
+   * @param scope - The granted access to be given to the access token.
+   * @param type - Desired authorization flow.
+   * @returns The URL to be used for Aspera On Cloud API authentication.
    */
   getOauthUrl(state?: string, scope: string[] = ['user:all'], responseType = 'code') {
     if (!this.getClientId()) {
@@ -160,9 +150,9 @@ export class AsperaOnCloudAuth {
 
   /**
    * Get the OAuth2 access token using the authorization code grant type
-   * @arg {String} code - The authorization code previously received by the authorization server.
-   * @arg {Array} scope - The granted access to be given to the access token.
-   * @returns {Promise<Object>} - An object containing the access token and associated info.
+   * @param code - The authorization code previously received by the authorization server.
+   * @param scope - The granted access to be given to the access token.
+   * @returns An object containing the access token and associated info.
    */
   getAccessTokenWithCode(code: string, scope: string[] = ['user:all']): AxiosPromise<any> {
     if (!this.getClientId()) {
@@ -201,11 +191,11 @@ export class AsperaOnCloudAuth {
 
   /**
    * Get the OAuth2 access token using the JWT bearer token grant type
-   * @arg {String} email - The email for the user associated with the private key being used.
-   * @arg {Buffer} privateKey - Private key to be used to sign the JWT. The associated public key
+   * @param email - The email for the user associated with the private key being used.
+   * @param privateKey - Private key to be used to sign the JWT. The associated public key
    * should be registered in Aspera On Cloud and will be used to verify the assertion.
-   * @arg {Array} scope - The granted access to be given to the access token.
-   * @returns {Promise<Object>} - An object containing the access token and associated info.
+   * @param scope - The granted access to be given to the access token.
+   * @returns An object containing the access token and associated info.
    */
   getAccessTokenWithJwt(email: string, privateKey: Buffer, scope: string[] = ['user:all']): AxiosPromise<any> {
     if (isBrowser()) {

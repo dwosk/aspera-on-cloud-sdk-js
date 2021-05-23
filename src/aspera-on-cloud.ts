@@ -11,9 +11,11 @@ import {
   PackagesApi,
   UsageReportsApi,
   UsersApi,
+  UsersResponse,
   WorkspaceMembershipsApi,
   WorkspacesApi,
 } from './api';
+import { AxiosPromise } from 'axios';
 
 export interface AsperaOnCloudOptions {
   /** Access token used for authenticating to the Aspera on Cloud API */
@@ -47,16 +49,6 @@ export interface AsperaOnCloudApi {
   workspaceMemberships: WorkspaceMembershipsApi;
 }
 
-/**
- * @class AsperaOnCloud
- * @classdesc The class that provides the interfaces used to interact with the Aspera On Cloud API.
- * @arg {Object} options
- * @arg {String} [options.accessToken] Access token used for authenticating to the Aspera on Cloud API.
- * @arg {String} [options.clientId] The client id of your app in the Aspera on Cloud Admin app.
- * @arg {String} [options.clientSecret] The client secret of your app in the Aspera on Cloud Admin app.
- * @arg {String} [options.org] The organization that your app belongs to.
- * @arg {String} [options.redirectUri] The redirect uri of your app specified in the Aspera on Cloud Admin app.
- */
 export class AsperaOnCloud {
   auth;
   api: AsperaOnCloudApi;
@@ -102,19 +94,19 @@ export class AsperaOnCloud {
 
   /**
    * Get account details for current user.
-   * @returns {Promise<Object>} - Account details
+   * @returns Account details
    */
-  getSelf(): Promise<any> {
+  getSelf(): AxiosPromise<UsersResponse> {
     return this.request('/self');
   }
 
   /**
    * Request method for manually constructing API calls not explicitly supported by the SDK.
-   * @arg {String} path - URL path for the request.
-   * @arg {Object} [options] - Specify options for the request such as method, payload, and search parameters.
-   * @returns {Promise<Object>} - Response object
+   * @arg path - URL path for the request.
+   * @arg options - Specify options for the request such as method, payload, and search parameters.
+   * @returns Response object
    */
-  request(path: string, options?: any): Promise<any> {
+  request(path: string, options?: any): AxiosPromise<any> {
     const axios = this.auth.getAxios();
     return axios(`${this.auth.getBasePath()}${path}`, options);
   }
