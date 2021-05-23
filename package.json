@@ -9,7 +9,8 @@
     "build": "npm run clean & npm run build:cjs && webpack --mode production",
     "build:cjs": "tsc -p tsconfig.json",
     "clean": "rm -rf ./dist",
-    "generate": "openapi-generator generate -g typescript-axios -i Aspera\\ On\\ Cloud\\ API-.json -o ./src/api -c .openapi.yml",
+    "docs": "jsdoc -c .jsdoc.js",
+    "generate": "openapi-generator generate -g typescript-axios -i Aspera\\ On\\ Cloud\\ API-.json --additional-properties=useSingleRequestParameter=true -o ./src/api",
     "dev": "webpack --mode development --progress --watch"
   },
   "devDependencies": {
