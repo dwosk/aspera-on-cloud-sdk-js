@@ -49,6 +49,7 @@ export interface AsperaOnCloudApi {
 
 /**
  * @class AsperaOnCloud
+ * @classdesc The class that provides the interfaces used to interact with the Aspera On Cloud API.
  * @arg {Object} options
  * @arg {String} [options.accessToken] Access token used for authenticating to the Aspera on Cloud API.
  * @arg {String} [options.clientId] The client id of your app in the Aspera on Cloud Admin app.
@@ -99,12 +100,20 @@ export class AsperaOnCloud {
     };
   }
 
-  /** Get details for current user */
+  /**
+   * Get account details for current user.
+   * @returns {Promise<Object>} - Account details
+   */
   getSelf(): Promise<any> {
     return this.request('/self');
   }
 
-  /** Request method for manually constructing API calls not explicitly supported by the SDK */
+  /**
+   * Request method for manually constructing API calls not explicitly supported by the SDK.
+   * @arg {String} path - URL path for the request.
+   * @arg {Object} [options] - Specify options for the request such as method, payload, and search parameters.
+   * @returns {Promise<Object>} - Response object
+   */
   request(path: string, options?: any): Promise<any> {
     const axios = this.auth.getAxios();
     return axios(`${this.auth.getBasePath()}${path}`, options);
