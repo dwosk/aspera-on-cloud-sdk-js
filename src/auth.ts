@@ -19,11 +19,6 @@ export class AsperaOnCloudAuth {
   constructor(options: AsperaOnCloudOptions) {
     options = options || {};
 
-    if (options.accessToken) {
-      this.accessToken = options.accessToken;
-      this.setAuthorizationHeader(this.accessToken);
-    }
-
     this.basePath = getServerUrl(options.apiServer);
     this.clientId = options.clientId;
     this.clientSecret = options.clientSecret;
@@ -36,6 +31,11 @@ export class AsperaOnCloudAuth {
       // TODO: check if user is authenticated
       return config;
     });
+
+    if (options.accessToken) {
+      this.accessToken = options.accessToken;
+      this.setAuthorizationHeader(this.accessToken);
+    }
   }
 
   /**
@@ -80,6 +80,14 @@ export class AsperaOnCloudAuth {
   }
 
   /**
+   * Set the client id
+   * @param clientId - Client id for the API integration
+   */
+  setClientId(clientId: string) {
+    this.clientId = clientId;
+  }
+
+  /**
    * Get the client secret for the API integration.
    * @returns Client secret
    */
@@ -93,6 +101,14 @@ export class AsperaOnCloudAuth {
    */
   getOrg() {
     return this.org;
+  }
+
+  /**
+   * Set the organization
+   * @param org Organization or subdomain of your Aspera On Cloud instance
+   */
+  setOrg(org: string) {
+    this.org = org;
   }
 
   /**
@@ -232,6 +248,35 @@ export class AsperaOnCloudAuth {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': `Basic ${basicAuth}`
       }
+    };
+
+    return this.axiosInstance(oauthUrl, options);
+  }
+
+  /**
+   * Get the OAuth2 access token required for making authorized requests to the Node API.
+   * @param accessKey - The access key for the node.
+   * @returns An object containing the access token and associated info.
+   */
+  getNodeAccessToken(accessKey: string) {
+    if (!this.getOrg()) {
+      throw new Error('Missing org');
+    }
+
+    if (!this.getAccessToken()) {
+      throw new Error('Missing Aspera On Cloud access token');
+    }
+
+    const oauthUrl = `${this.getBasePath()}/oauth2/${this.getOrg()}/token`;
+    const payload = {
+      client_id: this.getClientId(),
+      grant_type: 'access_token',
+      scope: `node.${accessKey}:user:all`
+    };
+
+    const options: AxiosRequestConfig = {
+      method: 'POST',
+      data: payload
     };
 
     return this.axiosInstance(oauthUrl, options);
