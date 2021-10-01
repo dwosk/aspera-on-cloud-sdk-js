@@ -1,0 +1,72 @@
+<script>
+  /**
+   * This page demonstrates how to get an OAuth2 access token in the browser using
+   * the token flow (implicit grant).
+   *
+   * If your API integration supports it, implicit grant should be used in the browser
+   * over the code flow as it does not require exposing your client secret.
+   */
+</script>
+<head></head>
+  <script src="/dist/js/aspera-on-cloud-sdk.js"></script>
+</head>
+<body>
+  <div>
+    <div id="not-authenticated" style="display:block">
+      <p>Click the link below to authenticate.</p>
+      <a href="" id="authenticate">Authenticate</a>
+    </div>
+    <div id="authenticated" style="display:none">
+      <p>If successful, you should see your account details:</p>
+      <p id="self"></p>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Insert your API client integration settings here as specified
+     * in the Aspera On Cloud Admin app.
+     *
+     * id - client id of your API client
+     * org - the organization or subdomain that your API client belongs to
+     * scope - desired grant access for the access token
+     */
+    const CLIENT = {
+      id: 'CLIENT_ID',
+      org: 'ORG',
+      scope: ['admin-user:all', 'user:all']
+    };
+
+    function getAccessToken() {
+      return new URLSearchParams(window.location.search).get('access_token')
+    }
+
+    function toggleAuthSections() {
+      document.getElementById('not-authenticated').style.display = 'none';
+      document.getElementById('authenticated').style.display = 'block';
+    }
+
+    const options = {
+      clientId: CLIENT.id,
+      org: CLIENT.org,
+      redirectUri: 'https://localhost:3000'
+    };
+    const aoc = new AsperaOnCloud(options);
+
+    const accessToken = getAccessToken();
+    if (!accessToken) {
+      const oauthUrl = aoc.auth.getOauthUrl(undefined, CLIENT.scope, 'token');
+      document.getElementById('authenticate').href = oauthUrl;
+    } else {
+      toggleAuthSections();
+
+      aoc.setAccessToken(accessToken);
+      aoc.getSelf()
+        .then(res => {
+          const selfContainer = document.getElementById('self');
+          selfContainer.innerText = JSON.stringify(res.data);
+        })
+        .catch(err => console.error(err));
+    }
+  </script>
+</body>
