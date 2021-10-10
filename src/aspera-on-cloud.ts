@@ -107,7 +107,8 @@ export class AsperaOnCloud {
    * @returns Response object
    */
   request(path: string, options?: any): AxiosPromise<any> {
+    const baseUrl = options?.baseUrl || this.auth.getBasePath();
     const axios = this.auth.getAxios();
-    return axios(`${this.auth.getBasePath()}${path}`, options);
+    return axios(`${baseUrl}${path}`, options);
   }
 }
