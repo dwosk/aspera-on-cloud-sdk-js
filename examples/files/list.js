@@ -45,7 +45,7 @@ const privateKey = fs.readFileSync(CLIENT.privateKey);
 
   // Get node info
   const node = await aoc.api.nodes.getInformationonaSpecificNode({ id: home_node_id });
-  const { access_key, host } = node.data;
+  const { access_key, url } = node.data;
 
   // Get access token for Node API access
   const nodeApiToken = await aoc.auth.getAccessTokenWithJwt(CLIENT.email, privateKey, [`node.${access_key}:user:all`]);
@@ -54,13 +54,13 @@ const privateKey = fs.readFileSync(CLIENT.privateKey);
     User Home File Id: ${home_file_id}
     Node Access Key: ${access_key}
     Node API Access Token: ${nodeAccessToken}
-    Host: ${host}
+    URL: ${url}
   `);
 
   // List files in user's home directory
   // https://developer.ibm.com/apis/catalog/aspera--aspera-node-api/api/API--aspera--aspera-node-api#get607099039
   let options = {
-    baseUrl: `https://${host}`,
+    baseUrl: url,
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${nodeAccessToken}`,
@@ -71,5 +71,5 @@ const privateKey = fs.readFileSync(CLIENT.privateKey);
   const files = await aoc.request(`/files/${home_file_id}/files`, options)
   files.data.forEach(file => {
     console.log(file.name);
-  })
+  });
 })();
