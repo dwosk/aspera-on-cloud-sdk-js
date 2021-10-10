@@ -58,6 +58,7 @@ const privateKey = fs.readFileSync(CLIENT.privateKey);
   `);
 
   // List files in user's home directory
+  // https://developer.ibm.com/apis/catalog/aspera--aspera-node-api/api/API--aspera--aspera-node-api#get607099039
   let options = {
     baseUrl: `https://${host}`,
     method: 'GET',
