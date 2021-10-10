@@ -52,11 +52,13 @@ export interface AsperaOnCloudApi {
 export class AsperaOnCloud {
   auth;
   api: AsperaOnCloudApi;
+  requests: String[];
 
   constructor(options: AsperaOnCloudOptions) {
     options = options || {};
 
     this.auth = options.auth || new AsperaOnCloudAuth(options);
+    this.requests = this.auth.requests;
 
     const basePath = this.auth.getBasePath();
     const globalAxios = this.auth.getAxios();
@@ -90,6 +92,14 @@ export class AsperaOnCloud {
       workspaces,
       workspaceMemberships
     };
+  }
+
+  /**
+   * Get array of request URLs (most recent on top)
+   * @returns Array of request URLs
+   */
+   getRequests() {
+    return this.requests;
   }
 
   /**

@@ -15,6 +15,7 @@ export class AsperaOnCloudAuth {
   clientSecret?;
   org?;
   redirectUri?;
+  requests: String[];
 
   constructor(options: AsperaOnCloudOptions) {
     options = options || {};
@@ -24,10 +25,16 @@ export class AsperaOnCloudAuth {
     this.clientSecret = options.clientSecret;
     this.org = options.org;
     this.redirectUri = options.redirectUri;
+    this.requests = [];
 
     this.axiosInstance = axios.create({ baseURL: this.basePath });
 
     this.axiosInstance.interceptors.request.use(config => {
+      // Log request URLs
+      if (config.url) {
+        this.requests.push(config.url);
+      }
+
       // TODO: check if user is authenticated
       return config;
     });
