@@ -257,6 +257,8 @@ export class AsperaOnCloudAuth {
    * Get the OAuth2 access token required for making authorized requests to the Node API.
    * @param accessKey - The access key for the node.
    * @returns An object containing the access token and associated info.
+   *
+   * NOTE: Restricted to "trusted" clients (i.e. f4.com)
    */
   getNodeAccessToken(accessKey: string) {
     if (!this.getOrg()) {
