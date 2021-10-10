@@ -59,6 +59,7 @@ const privateKey = fs.readFileSync(CLIENT.privateKey);
 
   // List files in user's home directory
   let options = {
+    baseUrl: `https://${host}`,
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${nodeAccessToken}`,
@@ -66,8 +67,8 @@ const privateKey = fs.readFileSync(CLIENT.privateKey);
     }
   };
 
-  // FIXME: Returns 404
-  // const filesUrl = `https://${host}/files/${home_file_id}/files`;
-  // const files = await aoc.request(filesUrl, options)
-  // console.log(files);
+  const files = await aoc.request(`/files/${home_file_id}/files`, options)
+  files.data.forEach(file => {
+    console.log(file.name);
+  })
 })();
