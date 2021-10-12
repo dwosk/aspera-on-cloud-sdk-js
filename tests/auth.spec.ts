@@ -62,6 +62,14 @@ describe('AsperaOnCloudAuth', () => {
     });
   });
 
+  describe('apiServer', () => {
+
+    test('can be set via the constructor', () => {
+      const aoc = new AsperaOnCloudAuth({ apiServer: 'foo.ibmaspera.com' });
+      expect(aoc.getBasePath()).toBe('https://foo.ibmaspera.com/api/v1/admin');
+    });
+  });
+
   describe('getAccessTokenWithJwt', () => {
 
     const buf = Buffer.alloc(5);
