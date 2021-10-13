@@ -98,7 +98,7 @@ export class AsperaOnCloud {
    * Get array of request URLs (most recent on top)
    * @returns Array of request URLs
    */
-   getRequests() {
+  getRequests() {
     return this.requests;
   }
 
